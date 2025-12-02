@@ -1,10 +1,10 @@
 from flask import Flask
 from flask_cors import CORS
-from backend.src.api.profiles import profiles_bp
-from backend.src.api.platforms import platforms_bp
-from backend.src.api.playlists import playlists_bp
-from backend.src.api.transfer import transfer_bp
-from backend.src.core.database import init_db
+from api.profiles import profiles_bp
+from api.platforms import platforms_bp
+from api.playlists import playlists_bp
+from api.transfer import transfer_bp
+from core.database import init_db
 
 app = Flask(__name__)
 CORS(app) # Allow frontend to call the API

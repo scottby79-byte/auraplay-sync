@@ -1,16 +1,22 @@
-from backend.src.core.database import SessionLocal
-from backend.src.models.profile import UserProfile, PlatformConfiguration
-from backend.src.core.security import encrypt_data, decrypt_data
+from core.database import SessionLocal
+from models.profile import UserProfile, PlatformConfiguration
+from core.security import encrypt_data, decrypt_data
 
 def get_all_profiles():
     db = SessionLocal()
     profiles = db.query(UserProfile).all()
+    # Force load platform_configurations for each profile before closing session
+    for profile in profiles:
+        _ = profile.platform_configurations 
     db.close()
     return profiles
 
 def get_profile_by_id(profile_id: int):
     db = SessionLocal()
     profile = db.query(UserProfile).filter(UserProfile.id == profile_id).first()
+    if profile:
+        # Force load platform_configurations before closing session
+        _ = profile.platform_configurations
     db.close()
     return profile
 
@@ -40,6 +46,8 @@ def create_profile(profile_data: dict):
     db.add(new_profile)
     db.commit()
     db.refresh(new_profile)
+    # Force load platform_configurations before closing session
+    _ = new_profile.platform_configurations
     db.close()
     return new_profile
 
@@ -75,6 +83,8 @@ def update_profile(profile_id: int, profile_data: dict):
 
     db.commit()
     db.refresh(profile)
+    # Force load platform_configurations before closing session
+    _ = profile.platform_configurations
     db.close()
     return profile
 

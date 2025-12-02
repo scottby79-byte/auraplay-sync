@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey
 from sqlalchemy.orm import relationship
-from backend.src.core.database import Base
+from core.database import Base
 
 class UserProfile(Base):
     __tablename__ = "user_profiles"

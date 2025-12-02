@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend:
     build:
@@ -25,6 +23,7 @@ services:
       - ./frontend/public:/app/public
     environment:
       - CHOKIDAR_USEPOLLING=true # Enables file watching in Docker for live-reloading
+      - REACT_APP_API_URL=http://localhost:5000/api
 
 volumes:
   auraplay_data:

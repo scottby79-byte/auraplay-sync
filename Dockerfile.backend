@@ -12,7 +12,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/src /app/src
 
 # Set up Flask environment
-ENV FLASK_APP=src/app.py
+ENV FLASK_APP=app.py
+ENV PYTHONPATH=/app/src
 ENV FLASK_ENV=development
 
 # Expose port

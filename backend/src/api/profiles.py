@@ -1,27 +1,27 @@
 from flask import Blueprint, request, jsonify
-from backend.src.services import profile_service
+from services import profile_service
 
 profiles_bp = Blueprint('profiles', __name__)
 
-@profiles_bp.route('/api/profiles', methods=['GET'])
+@profiles_bp.route('/api/profiles', methods=['GET'], endpoint='get_profiles')
 def get_profiles():
     profiles = profile_service.get_all_profiles()
     return jsonify([profile.to_dict() for profile in profiles])
 
-@profiles_bp.route('/api/profiles', methods=['POST'])
+@profiles_bp.route('/api/profiles', methods=['POST'], endpoint='create_profile')
 def create_profile():
     data = request.get_json()
     profile = profile_service.create_profile(data)
     return jsonify(profile.to_dict()), 201
 
-@profiles_bp.route('/api/profiles/<int:profile_id>', methods=['GET'])
+@profiles_bp.route('/api/profiles/<int:profile_id>', methods=['GET'], endpoint='get_profile')
 def get_profile(profile_id):
     profile = profile_service.get_profile_by_id(profile_id)
     if profile:
         return jsonify(profile.to_dict())
     return jsonify({'message': 'Profile not found'}), 404
 
-@profiles_bp.route('/api/profiles/<int:profile_id>', methods=['PUT'])
+@profiles_bp.route('/api/profiles/<int:profile_id>', methods=['PUT'], endpoint='update_profile')
 def update_profile(profile_id):
     data = request.get_json()
     profile = profile_service.update_profile(profile_id, data)
@@ -29,7 +29,7 @@ def update_profile(profile_id):
         return jsonify(profile.to_dict())
     return jsonify({'message': 'Profile not found'}), 404
 
-@profiles_bp.route('/api/profiles/<int:profile_id>', methods=['DELETE'])
+@profiles_bp.route('/api/profiles/<int:profile_id>', methods=['DELETE'], endpoint='delete_profile')
 def delete_profile(profile_id):
     success = profile_service.delete_profile(profile_id)
     if success:
@@ -38,7 +38,7 @@ def delete_profile(profile_id):
 
 # Add a to_dict method to the models to make them serializable
 def _patch_models_for_serialization():
-    from backend.src.models.profile import UserProfile, PlatformConfiguration
+    from models.profile import UserProfile, PlatformConfiguration
 
     def user_profile_to_dict(self):
         return {

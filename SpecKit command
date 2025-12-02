@@ -1,0 +1,35 @@
+/speckit.specify Auraplay-sync est une application modulaire de transfert de playlist et d'album entre plateformes de streaming musical.
+
+Elle devra supporter dans un premier temps les "modules" de plateformes suivantes :
+Deezer, Spotify, YouTube Music, Tidal, Qobuz
+
+L'application devra proposer à l'initialisation (premier ecran) la liste des profils utilisateur déjà créés ou d'en proposer d'en créer un nouveau. Il y a donc une gestion de profil utilisateur à stocker.
+
+Chaque profil utilisateur devra pouvoir stocker une configuration.
+
+Cette configuration consiste à garder les authentifications d'une plateforme de streaming source et d'une plateforme de streaming cible.
+ex : Nom du profil
+source : Spotify
+authentification : API Key
+Cible : Youtube music
+authentification : Token Jwt
+
+En fonction de la plateforme choisie, l'application devra proposer la méthode d'authentification inhérente à la plateforme pour acceder à ses API et devra guider l'utilisateur pour qu'il récupère le token, l'api key, bref les credentials permettant à l'application de se connecter aux API de la plateforme.
+
+Lors de la création d'un profil utilisateur, l'appication devra proposer la liste des plateforme qu'elle supporte pour la source, Idem pour la cible en ayant supprimée la plateforme de streaming source choisie.
+
+L'application devra avoir une interface pour gérer les profils utilisateurs afin de pouvoir les supprimer ou les modifier.
+
+Une fois le profil utilisateur créé ou selectionné, l'application se connecte à la plateforme de streaming source de l'utilisateur et afficher dans un tableau l'ensemble des playlists et albums de l'utilisateur. Elle affiche également dans un second tableau pour la plateforme de streaming cible, les playlists existantes.
+
+L'utilisateur selectionne les playlists/albums qu'il souhaitent transferer dans un tableu représentant la plateforme de streaming cible (drag and drop ?).
+Cela peut également descendre à un niveau de granularité plus fin c'est à dire au niveau des titres d'une playlist, pour les basculer dans une playlist cible soit existante ou non, avec la possibilité de la créé manuelement via un bouton au dessus du tableau des playlist cible par exemple.
+
+Il faudra choisir les bon modules graphiques pour répondre au mieu à ce besoin.
+
+
+Lorsque l'utilisateur a terminé sa selection de playlist/album/titres, il clique sur un bouton transfert. l'application utilise alors l'ensemble des API mise à sa disposition pour recreer le contenu qu'il a selectionné dans la plateforme de streaming cible. S'il y a des erreurs l'application, ne doit en aucun cas arreter son traitement et passer au titre suivant.
+
+Un rapport de transfert est alors affiché à l'utilisateur pour lui indiquer ce qui n'a pas pu être recreer dans la plateforme de straming cible. Il doit pouvoir être téléchargé.
+
+/speckit.plan l'application devra dans la mesure du possible etre développée en Python avec le framework Flask. Les interfaces en vueJs/Reacjs/angular. Les configurations des profils utilisateurs dans une base de donnée SQLLite. L'application devra pouvoir démarrer dans un container Docker avec un volume persistant pour la configuration des profil utilisateur dans SQLLite. L'application devra par ailleur être très user friendly utilisant les dernière norme web en étant complètement compatible sur l'ensemble des navigateurs du marché. Je souhaite que l'application utilise les dernières versions de librairie disponible actuellement.

@@ -1,9 +1,9 @@
 from flask import Blueprint, jsonify, request
-from backend.src.services import transfer_service
+from services import transfer_service
 
 transfer_bp = Blueprint('transfer', __name__)
 
-@transfer_bp.route('/api/profiles/<int:profile_id>/transfer', methods=['POST'])
+@transfer_bp.route('/api/profiles/<int:profile_id>/transfer', methods=['POST'], endpoint='transfer_items')
 def transfer(profile_id):
     data = request.get_json()
     items_to_transfer = data.get('items', [])
