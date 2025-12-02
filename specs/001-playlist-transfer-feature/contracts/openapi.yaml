@@ -1,0 +1,220 @@
+openapi: 3.0.3
+info:
+  title: AuraPlay-Sync API
+  description: API for managing user profiles and transferring playlists between music streaming services.
+  version: 1.0.0
+
+paths:
+  /api/profiles:
+    get:
+      summary: List all user profiles
+      operationId: list_profiles
+      responses:
+        '200':
+          description: A list of user profiles.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserProfile'
+    post:
+      summary: Create a new user profile
+      operationId: create_profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileInput'
+      responses:
+        '201':
+          description: The created user profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '400':
+          description: Invalid input.
+
+  /api/profiles/{profileId}:
+    get:
+      summary: Get a single user profile by ID
+      operationId: get_profile
+      parameters:
+        - name: profileId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: The requested user profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '404':
+          description: Profile not found.
+    put:
+      summary: Update an existing user profile
+      operationId: update_profile
+      parameters:
+        - name: profileId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileInput'
+      responses:
+        '200':
+          description: The updated user profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '404':
+          description: Profile not found.
+    delete:
+      summary: Delete a user profile
+      operationId: delete_profile
+      parameters:
+        - name: profileId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Profile deleted successfully.
+        '404':
+          description: Profile not found.
+
+  /api/platforms:
+    get:
+      summary: Get a list of supported platforms
+      operationId: get_supported_platforms
+      responses:
+        '200':
+          description: A list of supported streaming platforms.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  platforms:
+                    type: array
+                    items:
+                      type: string
+                example:
+                  platforms: ["Spotify", "Deezer", "YouTube Music", "Tidal", "Qobuz"]
+
+  /api/profiles/{profileId}/source/playlists:
+    get:
+      summary: Get playlists from the source platform for a profile
+      operationId: get_source_playlists
+      parameters:
+        - name: profileId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of playlists.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    track_count:
+                      type: integer
+        '404':
+          description: Profile not found.
+        '500':
+          description: Failed to connect to source platform.
+
+  /api/profiles/{profileId}/transfer:
+    post:
+      summary: Initiate a transfer from source to target
+      operationId: transfer
+      parameters:
+        - name: profileId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id: 
+                        type: string
+                      type:
+                        type: string
+                        enum: ["playlist", "album", "track"]
+                target_playlist_name:
+                  type: string
+                  description: Optional name for a new playlist on the target.
+      responses:
+        '202':
+          description: Transfer accepted and is processing in the background.
+        '400':
+          description: Invalid transfer request.
+        '404':
+          description: Profile not found.
+
+components:
+  schemas:
+    PlatformConfiguration:
+      type: object
+      properties:
+        platform_type:
+          type: string
+          enum: ["source", "target"]
+        platform_name:
+          type: string
+        # Credentials are not exposed via the API
+    ProfileInput:
+      type: object
+      required:
+        - name
+        - source_platform
+        - target_platform
+      properties:
+        name:
+          type: string
+        source_platform:
+          $ref: '#/components/schemas/PlatformConfiguration'
+        target_platform:
+          $ref: '#/components/schemas/PlatformConfiguration'
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        source_platform:
+          $ref: '#/components/schemas/PlatformConfiguration'
+        target_platform:
+          $ref: '#/components/schemas/PlatformConfiguration'

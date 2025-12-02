@@ -31,7 +31,11 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- **Platform Integration**: Does the plan account for modular integration of each streaming service?
+- **User-Friendly Web Interface**: Does the plan include wireframes or mockups for the user interface?
+- **Secure Authentication**: Does the plan use OAuth2 for all external service integrations?
+- **Efficient Playlist Transfer**: Does the plan address how to handle large playlists and potential API rate limits?
+- **Testability**: Does the plan include a testing strategy with unit and integration tests for each module?
 
 ## Project Structure
 
